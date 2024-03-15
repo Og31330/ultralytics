@@ -143,14 +143,20 @@ class KeypointLoss(nn.Module):
         e = d / (2 * self.sigmas).pow(2) / (area + 1e-9) / 2  # from cocoeval
         return (kpt_loss_factor.view(-1, 1) * ((1 - torch.exp(-e)) * kpt_mask)).mean()"""
 
+        """
         d = (pred_kpts[..., 0] - gt_kpts[..., 0]) ** 2 + (pred_kpts[..., 1] - gt_kpts[..., 1]) ** 2
         d_abs = d = (pred_kpts[..., 0] - gt_kpts[..., 0]).abs() + (pred_kpts[..., 1] - gt_kpts[..., 1]).abs()
         kpt_loss_factor = (torch.sum(kpt_mask != 0) + torch.sum(kpt_mask == 0)) / (torch.sum(kpt_mask != 0) + 1e-9)
         # e = d / (2 * (area * self.sigmas) ** 2 + 1e-9)  # from formula
         e = d / (2 * self.sigmas) ** 2 / (area + 1e-9) / 2  # from cocoeval
         print("## Custom Keypoint Loss ###")
-        return kpt_loss_factor * (((1 - torch.exp(-e))*0.1 + d_abs*0.9)* kpt_mask).mean()
+        return kpt_loss_factor * (((1 - torch.exp(-e))*0.1 + d_abs*0.9)* kpt_mask).mean()"""
+
         
+        d_abs = (pred_kpts[..., 0] - gt_kpts[..., 0]).abs() + (pred_kpts[..., 1] - gt_kpts[..., 1]).abs()
+        kpt_loss_factor = (torch.sum(kpt_mask != 0) + torch.sum(kpt_mask == 0)) / (torch.sum(kpt_mask != 0) + 1e-9)
+        print("## Custom Keypoint Loss ###")
+        return kpt_loss_factor * (d_abs* kpt_mask).mean()
 
 class v8DetectionLoss:
     """Criterion class for computing training losses."""
