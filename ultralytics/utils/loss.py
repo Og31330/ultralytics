@@ -133,6 +133,7 @@ class KeypointLoss(nn.Module):
     def __init__(self, sigmas) -> None:
         """Initialize the KeypointLoss class."""
         super().__init__()
+        print("########### CUSTOM KEYPOINT LOSS ##############")
         self.sigmas = sigmas
 
     def forward(self, pred_kpts, gt_kpts, kpt_mask, area):
@@ -159,7 +160,6 @@ class KeypointLoss(nn.Module):
 
         d_abs = (pred_kpts[..., 0] - gt_kpts[..., 0]).abs() + (pred_kpts[..., 1] - gt_kpts[..., 1]).abs()
         kpt_loss_factor = (torch.sum(kpt_mask != 0) + torch.sum(kpt_mask == 0)) / (torch.sum(kpt_mask != 0) + 1e-9)
-        print("## CKL ###")
         return kpt_loss_factor * (d_abs* kpt_mask).mean()
         
         
