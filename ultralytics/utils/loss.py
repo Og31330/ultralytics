@@ -153,14 +153,16 @@ class KeypointLoss(nn.Module):
         print("## Custom Keypoint Loss ###")
         return kpt_loss_factor * (((1 - torch.exp(-e))*0.1 + d_abs*0.9)* kpt_mask).mean()"""
 
-        """d = (pred_kpts[..., 0] - gt_kpts[..., 0]).pow(2) + (pred_kpts[..., 1] - gt_kpts[..., 1]).pow(2)
+        """d_abs = (pred_kpts[..., 0] - gt_kpts[..., 0]).abs() + (pred_kpts[..., 1] - gt_kpts[..., 1]).abs()
+        kpt_loss_factor = (torch.sum(kpt_mask != 0) + torch.sum(kpt_mask == 0)) / (torch.sum(kpt_mask != 0) + 1e-9)
+        return kpt_loss_factor * (d_abs* kpt_mask).mean()"""
+
+        d = (pred_kpts[..., 0] - gt_kpts[..., 0]).pow(2) + (pred_kpts[..., 1] - gt_kpts[..., 1]).pow(2)
         kpt_loss_factor = (torch.sum(kpt_mask != 0) + torch.sum(kpt_mask == 0)) / (torch.sum(kpt_mask != 0) + 1e-9)
         print("## Custom Keypoint Loss ###")
-        return kpt_loss_factor * (d * kpt_mask).mean()"""
+        return kpt_loss_factor * (d * kpt_mask).mean()
 
-        d_abs = (pred_kpts[..., 0] - gt_kpts[..., 0]).abs() + (pred_kpts[..., 1] - gt_kpts[..., 1]).abs()
-        kpt_loss_factor = (torch.sum(kpt_mask != 0) + torch.sum(kpt_mask == 0)) / (torch.sum(kpt_mask != 0) + 1e-9)
-        return kpt_loss_factor * (d_abs* kpt_mask).mean()
+
         
         
 
